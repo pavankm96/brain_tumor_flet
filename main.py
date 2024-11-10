@@ -1,6 +1,6 @@
 import flet as ft
 import hashlib
-import psycopg2
+import pg8000
 import requests
 from datetime import datetime
 
@@ -14,9 +14,15 @@ FASTAPI_URL = "https://pavankm96-bt-fastapi.hf.space/predict"
 def hash_password(password):
     return hashlib.sha256(password.encode()).hexdigest()
 
-# Function to connect to the PostgreSQL database
+# Function to connect to the PostgreSQL database using pg8000
+# Function to connect to the PostgreSQL database using pg8000
 def get_db_connection():
-    conn = psycopg2.connect(DB_URL)
+    conn = pg8000.connect(
+        user="patient_db_xa13_user",
+        password="FKIcfjuDn7HCJfOAsIV43pZsUgeSJtYn",
+        host="dpg-csmbgh3qf0us73fvpjsg-a.oregon-postgres.render.com",
+        database="patient_db_xa13"
+    )
     return conn
 
 # Function to calculate age from DOB
@@ -112,6 +118,11 @@ def main(page: ft.Page):
         register_section.visible=False
         register_section.update()
 
+    def clear_and_show_login(e=None):
+        clear_image_and_result(e)
+        show_login(e)
+
+
     # Function to show the profile page with image upload
     def show_profile(email):
         clear_sections()
@@ -140,7 +151,7 @@ def main(page: ft.Page):
                             tumor_detection_result,
                             uploaded_image,
                             ft.ElevatedButton("Clear", on_click=clear_image_and_result, color="#CC313D", bgcolor="#F7C5CC"),
-                            ft.ElevatedButton("Logout", on_click=show_login, color="#CC313D", bgcolor="#F7C5CC"),
+                            ft.ElevatedButton("Logout", on_click=clear_and_show_login, color="#CC313D", bgcolor="#F7C5CC"),
                             file_picker
                         ],
                         alignment=ft.MainAxisAlignment.CENTER,
@@ -262,7 +273,7 @@ def main(page: ft.Page):
                 profile_section.update()
                 return
 
-            uploaded_image.src = image_path  # Set the image source to the uploaded file path
+            uploaded_image.src = image_path if image_path else "D:/pythonProject/brain_tumor_pred/assets/upload.png" # Set the image source to the uploaded file path
             uploaded_image.update()
 
             try:
