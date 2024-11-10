@@ -50,11 +50,11 @@ jobs:
       with:
         distribution: 'temurin' # See https://github.com/marketplace/actions/setup-java-jdk#supported-distributions for available options
         java-version: '21'
-
+    -name:flutter pub get
+    run:flutter pub get
     - name: Flet Build APK
       run: |
         flutter config --no-analytics # disable flutter analytics
-        flutter pub get
         flet build apk --verbose    # adapt the command to your needs - https://flet.dev/docs/publish 
 
     - name: Upload APK Artifact
