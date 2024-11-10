@@ -1,4 +1,4 @@
 flet==0.22.*
 requests
-psycopg2
+psycopg2-binary
 datetime
